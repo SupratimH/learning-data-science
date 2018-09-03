@@ -10,9 +10,7 @@ from functools import reduce
 """ Calculate Correlation Coefficient, r = 1/(n-1)*Sum(Z_X * Z_Y) """
 def CorrCoeff(data_X, data_Y):
     nX, nY = len(data_X), len(data_Y)
-    if (nX != nY):
-        print("Length of X and Y datasets do not match!")
-        return -1
+    assert nX == nY and nX != 0, "Length of X and Y datasets do not match!"
     
     result = 0
     sd_X, sd_Y = ss.StdDev(data_X), ss.StdDev(data_Y)
@@ -52,3 +50,42 @@ def PearsonCorrCoeff(data_X, data_Y):
     result = float(result_Num)/float(math.sqrt(result_Den))
 
     return result
+
+
+""" Calculate Pearson Correlation Coefficient """
+def SpearmanCorrCoeff(data_X, data_Y):
+    nX, nY = len(data_X), len(data_Y)
+    assert nX == nY and nX != 0, "Length of X and Y datasets do not match!"
+    
+    data_X, data_Y = list(data_X), list(data_Y)
+    sorted_X, sorted_Y = sorted(data_X), sorted(data_Y)
+    
+    rank_X = []
+    rank_Y = []
+
+    # Store the rank of data_X[rec_X] in rank_X
+    for rec_X in data_X:
+        rank_X.append(sorted_X.index(rec_X)+1)
+
+    # Store the rank of data_X[rec_X] in rank_X
+    for rec_Y in data_Y:
+        rank_Y.append(sorted_Y.index(rec_Y)+1)
+
+    mean_X, mean_Y = ss.Mean(rank_X), ss.Mean(rank_Y)    
+    num = sum(map(lambda x, y: (x - mean_X)*(y - mean_Y), rank_X, rank_Y))
+    den = (sum(map(lambda x: pow((x - mean_X), 2), rank_X)) 
+            * sum(map(lambda x: pow((x - mean_X), 2), rank_X)))
+    den = math.sqrt(float(den))
+    
+    return (float(num)/float(den))
+    
+""" Calculate Covariance """
+def Covariance(data_X, data_Y):
+    nX, nY = len(data_X), len(data_Y)
+    assert nX == nY and nX != 0, "Length of X and Y datasets do not match!"
+    n = nX
+    
+    mean_X, mean_Y = ss.Mean(data_X), ss.Mean(data_Y)
+    sum_XY_dev = sum(map(lambda x, y: (x - mean_X)*(y - mean_Y), data_X, data_Y))
+    cov = float(sum_XY_dev/n)
+    return cov
