@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Jun 26 21:35:17 2018
-
-@author: SUHALDAR
+@author: Supratim Haldar
 """
 import math
 from operator import itemgetter
 
 """ Function to calculate Mean """
-def CalculateMean(data):
+def Mean(data):
     return float(sum(data)/len(data))
 
 """ Function to calculate Median """
-def CalculateMedian(data):
+def Median(data):
     sortedData = sorted(data) 
     length = len(data)
     
@@ -24,7 +23,7 @@ def CalculateMedian(data):
     return median
 
 """ Function to calculate Mode """
-def CalculateMode(data, type='max'):
+def Mode(data, type='max'):
     dict_Data = {}
     for rec in data:
         dict_Data[rec] = dict_Data.get(rec, 0) + 1
@@ -36,8 +35,8 @@ def CalculateMode(data, type='max'):
         return dict_Data.keys(), dict_Data.values()
 
 """ Function to calculate Variance """
-def CalculateVariance(data):
-    mean = CalculateMean(data)
+def Variance(data):
+    mean = Mean(data)
     dev = 0
     for rec in data:
         dev = dev + pow((rec - mean),2)
@@ -45,6 +44,9 @@ def CalculateVariance(data):
     return dev/len(data)
     
 """ Function to calculate Standard Deviation """
-def CalculateStdDev(data):
-    return math.sqrt(CalculateVariance(data))
+def StdDev(data):
+    return math.sqrt(Variance(data))
 
+""" Function to calculate Z-Score of an input out of a dataset data """
+def ZScore(input, data):
+    return ((input - Mean(data))/StdDev(data))
