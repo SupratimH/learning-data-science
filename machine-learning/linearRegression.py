@@ -3,12 +3,15 @@ Created on Tue Sep 11 2018
 @author: Supratim Haldar
 @Description: My implementation of linear regression algorithm
 """
+import numpy as np
 
+# =============================================================================
 # Compute cost of Linear Regression with single feature. Normal implementation.
 # Also called Squared Error Function or Mean Squared Error.
 # J(theta) = (1/2m)SUM((h(x) - y))^2
 # Input: List of X, y and theta(params)
 # Output: Cost value
+# =============================================================================
 def computeCost(data_X, data_y, theta):
     m = len(data_X) # No of records
     error_sq, cost = 0, 0
@@ -21,8 +24,10 @@ def computeCost(data_X, data_y, theta):
     return cost        
 
 
+# =============================================================================
 # Compute cost of Linear Regression with multiple features
 # Normal implementation
+# =============================================================================
 def computeCostMulti(data_X, data_y, theta):
     m = len(data_X) # No of records
     n = len(data_X[0]) # No of features
@@ -38,8 +43,31 @@ def computeCostMulti(data_X, data_y, theta):
     return round(cost, 4)
 
 
+# =============================================================================
+# Compute cost of Linear Regression with multiple features
+# Vectorized implementation
+# Input: data_X = mxn matrix, data_y = m-dim vector, theta = n-dim vector
+# Output: cost = 1-dim vector
+# =============================================================================
+def computeCostMulti_Vectorized(data_X, data_y, theta):
+    # No of rows
+    m = len(data_X)
+    
+    # h(x) = theta0 + theta1*X1 + theta2*X2 + .. + thetan*Xn
+    # hx = X * theta = m-dim vector
+    hx = np.dot(data_X, theta)
+    error = hx - data_y
+    error_sq = np.power(error, 2)
+    cost = sum(error_sq/(2*m))
+    
+    cost.astype(float, copy=False)
+    return np.around(cost, decimals=4)
+    
+
+# =============================================================================
 # Perform gradient descent on Linear Regression with multiple features
 # Normal implementation
+# =============================================================================
 def gradientDescentMulti(data_X, data_y, theta, alpha, num_iters):
     m = len(data_X) # No of records
     n = len(data_X[0]) # No of features
@@ -69,4 +97,29 @@ def gradientDescentMulti(data_X, data_y, theta, alpha, num_iters):
         #print('Cost = %0.4f' % J_history[iteration])
             
     return theta, J_history
- 
+
+
+# =============================================================================
+# Compute cost of Linear Regression with multiple features
+# Vectorized implementation
+# Input: data_X = mxn matrix, data_y = m-dim vector, theta = n-dim vector
+# alpha = learning rate, num_iters = no of iterations/steps for GD
+# Output: theta = n-dim vector, 
+# J_history = cost at each iteration, a num_iters-dim vector
+# =============================================================================
+def gradientDescentMulti_Vectorized(data_X, data_y, theta, alpha, num_iters):
+    m = len(data_X) # No of rows
+    J_history = np.zeros([num_iters, 1])
+    
+    for i in range(num_iters):
+        hx = np.dot(data_X, theta)
+        error = hx - data_y
+        theta_change = (alpha/m) * np.dot(data_X.T, error)
+        theta = theta - theta_change
+        
+        J_history[i] = computeCostMulti_Vectorized(data_X, data_y, theta)
+        
+    return theta, J_history
+
+
+            
