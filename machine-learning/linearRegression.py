@@ -100,7 +100,7 @@ def gradientDescentMulti(data_X, data_y, theta, alpha, num_iters):
 
 
 # =============================================================================
-# Compute cost of Linear Regression with multiple features
+# Gradient Descent of Linear Regression with multiple features
 # Vectorized implementation
 # Input: data_X = mxn matrix, data_y = m-dim vector, theta = n-dim vector
 # alpha = learning rate, num_iters = no of iterations/steps for GD

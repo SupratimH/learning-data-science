@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created on Tue Sep 11 2018
 @author: Supratim Haldar
@@ -8,12 +7,13 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as pyplot
 import linearRegression
+import time
 
 # Load training data. This dataset is downloaded from
 # https://www.kaggle.com/c/house-prices-advanced-regression-techniques/data
 def loadTrainingData():
-    #train_data = pd.read_csv("C:\Study\DataSets\House_Prices-Advanced_Regression_Techniques\\train.csv")
-    train_data = pd.read_csv('C:\Study\Data Science\Coursera Machine Learning - Andrew NG\Assignments\machine-learning-ex1\ex1\ex1data2.csv')
+    train_data = pd.read_csv("C:\Study\DataSets\House_Prices-Advanced_Regression_Techniques\\train.csv")
+    #train_data = pd.read_csv('C:\Study\Data Science\Coursera Machine Learning - Andrew NG\Assignments\machine-learning-ex1\ex1\ex1data2.csv')
     #print(train_data.isnull().sum())
     return train_data
 
@@ -78,34 +78,39 @@ def test_LinearRegression_Vectorized(train_data):
     m = len(train_data)
     
     # Populate y data into a m-dim vector
-    # And then drop the column from feature list
+    # And then drop that column from feature list
     data_y = train_data.SalePrice.values.reshape(m, 1)
     train_data = train_data.drop('SalePrice', 1) 
     
+    # Copy selected features
+    #train_data = train_data.loc[:,['LotArea','BedroomAbvGr']]
+    train_data = train_data.loc[:,['LotArea','YearBuilt','GrLivArea','BedroomAbvGr']]
+    
     # Normalise features  
     train_data = train_data.apply(normaliseFeature, axis = "rows")
-    
+
     # Setting first feature to 1, this is the bias/y-intercept or theta0
     train_data['first_dummy_feature'] = 1 
+    #train_data = train_data.loc[:,['first_dummy_feature', 'LotArea','BedroomAbvGr']]
+    train_data = train_data.loc[:,['first_dummy_feature', 'LotArea','YearBuilt','GrLivArea','BedroomAbvGr']]
 
     # Populate X (features) data into a mxn matrix
-    data_X = train_data.loc[:,['first_dummy_feature', \
-           'LotArea','BedroomAbvGr']].values
-           #'LotArea','YearBuilt','GrLivArea','BedroomAbvGr']]))
+    data_X = train_data.values
 
     # Set initial theta to 0's in a n-dim vector
     n = len(data_X[0])
     initial_theta = np.zeros([n, 1])
 
     # Calculate linear regression cost with initial_theta of 0
+    np.set_printoptions(precision=4, suppress=True)
     cost = linearRegression.computeCostMulti_Vectorized(data_X, data_y, initial_theta)
     print("Linear Regression: Cost with 0 Theta (Vectorized) = ", cost)
     
     # Perform gradient descent to find optimal theta
-    alpha, num_iters = 0.01, 400
+    alpha, num_iters = 0.01, 1000
     theta, J_history = linearRegression.gradientDescentMulti_Vectorized(data_X, data_y, \
                 initial_theta, alpha, num_iters)
-    print("Linear Regression: Theta after Gradient Descent (Vectorized) = ", theta)
+    print("Linear Regression: Theta after Gradient Descent (Vectorized) = ", np.around(theta, 4))
     
     # Calculate linear regression cost with theta after gradient descent
     cost = linearRegression.computeCostMulti_Vectorized(data_X, data_y, theta)
@@ -115,9 +120,11 @@ def test_LinearRegression_Vectorized(train_data):
 
     
 def main():
+    start_time = time.time()
     train_data = loadTrainingData()
     #test_LinearRegression(train_data)
     test_LinearRegression_Vectorized(train_data)
+    print("Execution time in Seconds =", time.time() - start_time)
 
 if __name__ == '__main__':
     main()
