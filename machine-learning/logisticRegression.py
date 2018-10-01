@@ -4,6 +4,7 @@ Created on Tue Sep 14 2018
 @Description: My implementation of logistic regression (classifier) algorithm
 """
 import numpy as np
+from scipy import optimize
 
 # =============================================================================
 # Function to calculate value Sigmoid Function of any variable z.
@@ -29,17 +30,52 @@ def sigmoid(z):
 # Input: data_X = mxn matrix, data_y = m-dim vector, theta = n-dim vector
 # Output: cost = 1-dim vector
 # =============================================================================
-def computeCost(data_X, data_y, theta):
-    # No of rows
-    m = len(data_X)
+def computeCost(theta, data_X, data_y, lambda_reg = 0):
+    m = len(data_X) # No of rows
+    n = len(data_X[0]) # No of features
+    theta = theta.reshape(n,1)
     
     # h(x) = g(z) = g(theta0 + theta1*X1 + theta2*X2 + .. + thetan*Xn)
     # h(x) = g(X * theta) = Sigmoid(X * theta) = m-dim vector
     hx = sigmoid(np.dot(data_X, theta))
     cost = - np.dot(data_y.T, np.log(hx)) - np.dot((1 - data_y).T, np.log(1 - hx))
+    
+    # This is unregularized cost
     J = cost/m
+    
+    # Adding regularization. Setting theta0 to 0, because theta0 will not be 
+    # regularized
+    J_reg = (lambda_reg/(2*m)) * np.dot(theta[1:,:].T, theta[1:,:])
+    J = J + J_reg
+    
     return J
     
+
+# =============================================================================
+# Compute gradient or derivative of cost function over parameter, i.e.
+# d J(Theta)/d Theta
+# =============================================================================
+def computeGradient(theta, data_X, data_y, lambda_reg = 0):
+    m = len(data_X) # No of rows
+    n = len(data_X[0]) # No of features
+    theta = theta.reshape(n,1)
+    theta_gradient = np.zeros(theta.shape)
+    cost = 0
+    #print("==== Inside computeGradient() ====", data_X.shape, data_y.shape)
+
+    cost = computeCost(theta, data_X, data_y, lambda_reg)
+    
+    hx = sigmoid(np.dot(data_X, theta))
+    error = hx - data_y
+    theta_gradient = (1/m) * (np.dot(data_X.T, error))
+    
+    # Apply regularization
+    theta_reg = (lambda_reg/m) * theta[1:,:]
+    theta_gradient[1:,:] = theta_gradient[1:,:] + theta_reg
+    
+    #print("==== Inside computeGradient() ====", cost)
+    return cost.flatten(), theta_gradient.flatten()
+
 
 # =============================================================================
 # Gradient Descent of Linear Regression with multiple features
@@ -49,14 +85,10 @@ def computeCost(data_X, data_y, theta):
 # Output: theta = n-dim vector, 
 # J_history = cost at each iteration, a num_iters-dim vector
 # =============================================================================
-def gradientDescent(data_X, data_y, theta, alpha, num_iters):
+def gradientDescent(theta, data_X, data_y, alpha, num_iters, lambda_reg = 0):
     m = len(data_X) # No of rows
     J_history = np.zeros([num_iters, 1])
 
-#    hx = sigmoid(np.dot(data_X, theta))
-#    error = hx - data_y
-#    theta = (np.dot(data_X.T, error))/m
-    
     for i in range(num_iters):
         hx = np.zeros(data_y.shape)
         error = np.zeros(data_y.shape)
@@ -64,11 +96,55 @@ def gradientDescent(data_X, data_y, theta, alpha, num_iters):
         
         hx = sigmoid(np.dot(data_X, theta))
         error = hx - data_y
-        theta_change = (alpha) * (np.dot(data_X.T, error)/m)
+        theta_change = (alpha/m) * (np.dot(data_X.T, error))
+        
+        # Apply regularization
+        temp = theta[0,0]
+        theta[0,0] = 0
+        theta_reg = (lambda_reg/m) * theta
+        theta[0,0] = temp;
+        theta_change = theta_change + theta_reg
+        
         theta = theta - theta_change
         
-        J_history[i] = computeCost(data_X, data_y, theta)
-        #print("J_history", i, J_history[i])
+        J_history[i] = computeCost(theta, data_X, data_y, lambda_reg)
         
-    return theta, J_history
+    return theta, theta_change, J_history
+
+# =============================================================================
+# Predict results based on test input feature and parameter values
+# Compare with output results, if already available
+# =============================================================================
+def predict(theta, data_X, data_y):
+    prob = sigmoid(np.dot(data_X, theta))
+    pred = prob >= 0.5
+    accuracy = np.mean((pred == data_y)) * 100
+    print("Predict: Prediction Accuracy % =", accuracy)
+    return pred, accuracy
+
+
+# =============================================================================
+# One vs All method of logistic regression
+# Used for data with multiple clssification outputs
+# =============================================================================
+def oneVsAll(data_X, data_y, num_labels, lambda_reg):
+    n = data_X.shape[1] # No of features
+    all_theta = np.zeros([num_labels, n])
+    initial_theta = np.zeros([n, 1])
+    print("OneVsAll: Shape of X and y: ", data_X.shape, data_y.shape)
+    
+    for label in range(num_labels):
+        # Calling advanced optimization alogorith to converge gradient
+        theta_optimized = optimize.minimize( \
+            computeGradient, \
+            initial_theta, \
+            args=(data_X, data_y == label, lambda_reg), \
+            method = "CG", 
+            jac=True, options={'disp': True, 'maxiter': 100} \
+            )
+        print("OneVsAll: Optimization Result =", theta_optimized.message, theta_optimized.success)
+        theta = theta_optimized.x.reshape(n, 1)
+        all_theta[label,:] = theta.T
+
+    return all_theta
 
