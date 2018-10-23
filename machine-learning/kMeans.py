@@ -21,11 +21,13 @@ def clusterAssignment(data_X, initial_centroids):
     #Distance matrix of size m x k
     Distance = np.zeros([m, k])
     
+    #Loop through each centroid and calculate distance from X
     for j in range(k):
         Centroid = initial_centroids[j, :]
         Distance[:, j] = np.sum(((data_X - Centroid)**2), axis=1)
     print("Distance =", Distance)
     
+    # Find centroid which is nearest to the X
     closestCentroidIdx = np.argmin(Distance, axis=1).reshape(m, -1)
     print("Closest Centroid Index =", closestCentroidIdx)
     return closestCentroidIdx
@@ -36,6 +38,9 @@ def clusterAssignment(data_X, initial_centroids):
 # =============================================================================
 def moveCentroid(data_X, closestCentroidIdx, k):
     NewCentroids = np.zeros([k, data_X.shape[1]])
+    
+    # Loop through each centroid and find mean of X assigned to that centroid
+    # Set new centroid value to that mean
     for j in range(k):
         position = np.where(closestCentroidIdx == j)
         NewCentroids[j, :] = np.mean(data_X[position[0], :])
@@ -48,9 +53,9 @@ def moveCentroid(data_X, closestCentroidIdx, k):
 # Initialize the cluster centroids
 # =============================================================================
 def initCentroids():
-    initial_centroids = np.array([[4, 4], [10, 10], [18, 18]])
-    print("Initial Centroids =", initial_centroids)
-    return initial_centroids
+    Initial_Centroids = np.array([[4, 4], [10, 10], [18, 18]])
+    print("Initial Centroids =", Initial_Centroids)
+    return Initial_Centroids
 
 # =============================================================================
 # Prepare training data
@@ -73,15 +78,15 @@ def test_kMeans():
     data_X = generateData(m)
     plt.scatter(data_X[:, 0], data_X[:, 1])
     
-    initial_centroids = initCentroids()
-    k = initial_centroids.shape[0]
-    plt.plot(initial_centroids[:, 0], initial_centroids[:, 1], 'rX')
+    Initial_Centroids = initCentroids()
+    k = Initial_Centroids.shape[0]
+    plt.plot(Initial_Centroids[:, 0], Initial_Centroids[:, 1], 'rX')
     
     num_iters = 2
     for i in range(num_iters):
-        closestCentroidIdx = clusterAssignment(data_X, initial_centroids)
+        closestCentroidIdx = clusterAssignment(data_X, Initial_Centroids)
         NewCentroids = moveCentroid(data_X, closestCentroidIdx, k)
-        initial_centroids = NewCentroids
+        Initial_Centroids = NewCentroids
     
     closestCentroidIdx = clusterAssignment(data_X, NewCentroids)
     plt.plot(NewCentroids[:, 0], NewCentroids[:, 1], 'go')
@@ -109,8 +114,4 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
-
 
