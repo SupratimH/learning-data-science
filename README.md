@@ -1,5 +1,5 @@
 # Learning-Data-Science
-
+### Bio: [Supratim Haldar](http://supratimh.github.io)
 ### Collection of my practice and project work in Data Science and Machine Learning. The repository is organized as follows:
 
 * [statistics](https://github.com/SupratimH/learning-data-science/tree/master/statistics): Implementations of core concepts of statistics using Python 3.
