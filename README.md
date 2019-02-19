@@ -17,4 +17,4 @@
 
 * [An analysis of traffic and accidents on roads of Bangalore](https://github.com/SupratimH/learning-data-science/blob/master/project-playground/bangalore-road-accident-eda.ipynb)
 * [An analysis of customer churn in the telco industry](https://github.com/SupratimH/learning-data-science/blob/master/project-playground/telco-customer-churn-basic-eda.ipynb)
-* [Analysis of passengers on board Titanic ship and prediction of chances of survival](https://github.com/SupratimH/learning-data-science/blob/master/project-playground/titanic-disaster-and-survival-eda-and-prediction.ipynb)
+* [Analysis of chances of survival of passengers on board Titanic ship](https://github.com/SupratimH/learning-data-science/blob/master/project-playground/titanic-disaster-and-survival-eda-and-prediction.ipynb) and [prediction of chances of survival of the passengers](https://github.com/SupratimH/learning-data-science/blob/master/project-playground/titanic-disaster-and-survival-models.ipynb)
