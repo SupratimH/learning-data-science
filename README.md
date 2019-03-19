@@ -6,9 +6,13 @@
 
 * [machine-learning](https://github.com/SupratimH/learning-data-science/tree/master/machine-learning): My implementations of core machine learning algorithms using only Python 3 and Numpy.
   
-* [ml-using-libraries](https://github.com/SupratimH/learning-data-science/tree/master/ml-using-libraries): Understanding of core machine learning algorithms using standard libraries, such as scikit-learn.
+* [ml-using-libraries](https://github.com/SupratimH/learning-data-science/tree/master/ml-using-libraries): Understanding of core machine learning algorithms using standard libraries, such as scikit-learn, nltk etc.
+
+* [deep-learning](https://github.com/SupratimH/learning-data-science/tree/master/deep-learning): My implementations of deep neural networks using only Python 3 and Numpy.
 
 * [project-playground](https://github.com/SupratimH/learning-data-science/tree/master/project-playground): Solutions to real world use cases using data collected from public repositories.
+
+* [web-scraping](https://github.com/SupratimH/learning-data-science/tree/master/web-scraping): Projects to collect data from web using scraping methods.
 
 ### Quick link to few interesting projects:
 
