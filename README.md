@@ -22,4 +22,4 @@
 * [Detecting hate comments in Tweets](https://github.com/SupratimH/learning-data-science/blob/master/ml-using-libraries/twitter-sentiment-analysis-classification-1.ipynb)
 * [Anomaly Detection: An implementation (from scratch) to detect server hardware performance anomalies](https://github.com/SupratimH/learning-data-science/blob/master/machine-learning/anomaly-detection.ipynb)
 * [Movie Recommender System using Collaborative Filtering from scratch: recommend movies to user based on taste of other similar users](https://github.com/SupratimH/learning-data-science/blob/master/machine-learning/collaborative-filtering.ipynb)
-* [Movie Recommender System using Content-Based Filtering from scratch: recommend movies based on plot, cast and crew, genres and keywords](https://github.com/SupratimH/learning-data-science/blob/master/machine-learning/collaborative-filtering.ipynb)
+* [Movie Recommender System using Content-Based Filtering from scratch: recommend movies based on plot, cast and crew, genres and keywords](https://github.com/SupratimH/learning-data-science/blob/master/machine-learning/content-based-recommender.ipynb)
